@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-String uri = 'https://3d70-156-217-14-132.eu.ngrok.io';
+String uri = 'https://62dc-156-217-14-132.eu.ngrok.io';
 
 class GlobalVariables {
   // COLORS

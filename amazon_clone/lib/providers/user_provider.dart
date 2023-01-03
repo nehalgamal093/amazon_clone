@@ -1,11 +1,11 @@
 import 'package:amazon_clone/models/user.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class UserProvider extends ChangeNotifier {
   User _user = User(
       id: '',
-      email: '',
       name: '',
+      email: '',
       password: '',
       address: '',
       type: '',
