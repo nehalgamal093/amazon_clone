@@ -14,7 +14,7 @@ class PostScreen extends StatefulWidget {
 }
 
 class _PostScreenState extends State<PostScreen> {
-  List<Product> products = [];
+  List<Product>? products;
   final AdminServices adminServices = AdminServices();
   @override
   void initState() {
@@ -27,6 +27,16 @@ class _PostScreenState extends State<PostScreen> {
     setState(() {});
   }
 
+  void deleteProduct(Product product, int index) {
+    adminServices.deleteProduct(
+        context: context,
+        product: product,
+        onSuccess: () {
+          products!.removeAt(index);
+          setState(() {});
+        });
+  }
+
   void navigateToAddProduct() {
     Navigator.pushNamed(context, AddProductScreen.routeName);
   }
@@ -37,11 +47,11 @@ class _PostScreenState extends State<PostScreen> {
         ? const Loader()
         : Scaffold(
             body: GridView.builder(
-              itemCount: products.length,
+                itemCount: products!.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2),
                 itemBuilder: (context, index) {
-                  final productData = products[index];
+                  final productData = products![index];
                   return Column(
                     children: [
                       SizedBox(
@@ -54,11 +64,15 @@ class _PostScreenState extends State<PostScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Expanded(
-                              child: Text(
-                            productData.name,
-                            overflow: TextOverflow.ellipsis,
-                          ),),
-                          IconButton(onPressed: (){}, icon: const Icon(Icons.delete_outline))
+                            child: Text(
+                              productData.name,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          IconButton(
+                              onPressed: () =>
+                                  deleteProduct(productData, index),
+                              icon: const Icon(Icons.delete_outline))
                         ],
                       )
                     ],
