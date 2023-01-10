@@ -1,23 +1,21 @@
-import 'package:amazon_clone/features/home/search/screens/search_screen.dart';
-import 'package:amazon_clone/features/home/widgets/address_box.dart';
-import 'package:amazon_clone/features/home/widgets/crousel_image.dart';
-import 'package:amazon_clone/features/home/widgets/deal_of_day.dart';
-import 'package:amazon_clone/providers/user_provider.dart';
+import 'package:amazon_clone/common/widgets/stars.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../../constants/global_variables.dart';
-import '../widgets/top_categories.dart';
+import '../../../models/product.dart';
+import '../../home/search/screens/search_screen.dart';
 
-class HomeScreen extends StatefulWidget {
-  static const String routeName = '/home';
-  const HomeScreen({super.key});
+class ProductDetailsScreen extends StatefulWidget {
+  static const String routeName = '/product-details';
+  final Product product;
+  const ProductDetailsScreen({super.key, required this.product});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   void navigateToSearchScreen(String query) {
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
   }
@@ -88,15 +86,53 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: SingleChildScrollView(
           child: Column(
-            children: const [
-              AddressBox(),
-              SizedBox(
-                height: 10,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(widget.product.id!),
+                    const Stars(rating: 4),
+                  ],
+                ),
               ),
-              TopCategories(),
-              SizedBox(height: 10),
-              CarouselImage(),
-              DealOfDay()
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                child: Text(
+                  widget.product.name,
+                  style: const TextStyle(fontSize: 15),
+                ),
+              ),
+              CarouselSlider(
+                items: widget.product.images.map((i) {
+                  return Builder(
+                    builder: (BuildContext context) => Image.network(
+                      i,
+                      fit: BoxFit.cover,
+                      height: 300,
+                    ),
+                  );
+                }).toList(),
+                options: CarouselOptions(viewportFraction: 1, height: 300),
+              ),
+              Container(
+                color: Colors.black12,
+                height: 5,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: RichText(
+                  text: const TextSpan(
+                      text: 'Deal Price',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold)),
+                ),
+              )
             ],
           ),
         ));
